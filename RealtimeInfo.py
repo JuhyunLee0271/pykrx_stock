@@ -29,7 +29,7 @@ def main():
     # 종목 코드 정보: sc.CODE
     sc = TodayInfoCrawler()
     sc.UpdateStockPrice()
-
+    
     # sc.PRICE_NOW
     # {'095570': 5460, '006840': 24600, '027410': 6060, ...}
 
