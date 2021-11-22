@@ -11,15 +11,16 @@ RealtimeInfo
 class TodayInfoCrawler:
     def __init__(self):
         self.CODE = stock.get_market_ticker_list(market="KOSPI") + stock.get_market_ticker_list(market="KOSDAQ")
-        self.today = str(datetime.now().date()).replace('-','')
+        # self.today = str(datetime.now().date()).replace('-','')
+        self.today = "20211122"
         self.KOSPI = None
         self.KOSDAQ = None
         self.PRICE_NOW = None
     
     def UpdateStockPrice(self):
-        self.KOSPI = stock.get_market_ohlcv_by_ticker(self.today, market="KOSPI")['종가'].to_dict()
+        self.KOSPI = stock.get_market_ohlcv_by_ticker(self.today, market="KOSPI")[['등락률', '종가', '거래량', '거래대금']].to_dict('index')
         time.sleep(1)
-        self.KOSDAQ = stock.get_market_ohlcv_by_ticker(self.today, market="KOSDAQ")['종가'].to_dict()
+        self.KOSDAQ = stock.get_market_ohlcv_by_ticker(self.today, market="KOSDAQ")[['등락률', '종가', '거래량', '거래대금']].to_dict('index')
         self.PRICE_NOW = dict(self.KOSPI, **self.KOSDAQ)
 
 # def sched(sc):
@@ -27,9 +28,8 @@ class TodayInfoCrawler:
 
 def main():
     # 종목 코드 정보: sc.CODE
-    sc = TodayInfoCrawler()
-    sc.UpdateStockPrice()
-    
+    sc = TodayInfoCrawler(); sc.UpdateStockPrice()
+    print(sc.PRICE_NOW)
     # sc.PRICE_NOW
     # {'095570': 5460, '006840': 24600, '027410': 6060, ...}
 
